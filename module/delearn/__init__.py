@@ -11,7 +11,7 @@ from .module import *
 
 from .data import *
 
-from .optim import *
+from .optim import * # depends on .module
 
 from .trainer import *
 
