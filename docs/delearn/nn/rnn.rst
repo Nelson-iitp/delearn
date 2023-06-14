@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-mailer
+rnn
 ----------------------------------------
-.. automodule:: known.mailer
+.. automodule:: delearn.nn.rnn
     :members:

@@ -1,13 +1,13 @@
 =====================
-known
+delearn
 =====================
-.. automodule:: known
+.. automodule:: delearn
 
 .. toctree::
     :caption: Modules
 
-    known/basic
-    known/mailer
-    known/hyper
-    known/ktorch
+    delearn/common
+    delearn/nn
+    delearn/data
+    delearn/utils
 

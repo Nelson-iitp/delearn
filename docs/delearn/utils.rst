@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-basic
+utils
 ----------------------------------------
-.. automodule:: known.basic
+.. automodule:: delearn.utils
     :members:

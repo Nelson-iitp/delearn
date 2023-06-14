@@ -1,5 +1,10 @@
 ﻿----------------------------------------
-common
+data
 ----------------------------------------
-.. automodule:: known.ktorch.common
+.. automodule:: delearn.data
     :members:
+
+.. toctree::
+    
+    data/seq
+    data/lang

@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-core
+mlp
 ----------------------------------------
-.. automodule:: known.hyper.core
+.. automodule:: delearn.nn.mlp
     :members:

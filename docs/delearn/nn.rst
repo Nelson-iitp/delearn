@@ -1,5 +1,11 @@
 ﻿----------------------------------------
-utils
+nn
 ----------------------------------------
-.. automodule:: known.ktorch.utils
+.. automodule:: delearn.nn
     :members:
+
+.. toctree::
+    
+    nn/mlp
+    nn/rnn
+    nn/rnnc

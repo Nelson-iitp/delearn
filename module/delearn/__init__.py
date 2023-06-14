@@ -1,26 +1,28 @@
 __doc__=r"""
+
+Deep Learning with pytorch
+
 :py:mod:`delearn/__init__.py`
 """
 
-from . import ktorch
+from .common import *
+
+from .module import *
+
+from .data import *
+
+from .optim import *
+
+from .trainer import *
+
+from .utils import *
+
 
 __version__="0.0.1"
 
+print(f'delearn.{__version__}')
 
 #-----------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 """ FOOT NOTE:
 

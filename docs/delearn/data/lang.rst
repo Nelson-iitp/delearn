@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-html
+lang
 ----------------------------------------
-.. automodule:: known.hyper.html
+.. automodule:: delearn.data.lang
     :members:

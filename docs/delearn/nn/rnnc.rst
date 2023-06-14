@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-md
+rnnc
 ----------------------------------------
-.. automodule:: known.hyper.md
+.. automodule:: delearn.nn.rnnc
     :members:

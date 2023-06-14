@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-mlp
+seq
 ----------------------------------------
-.. automodule:: known.ktorch.mlp
+.. automodule:: delearn.data.seq
     :members:

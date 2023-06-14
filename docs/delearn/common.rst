@@ -1,5 +1,5 @@
 ﻿----------------------------------------
-data
+common
 ----------------------------------------
-.. automodule:: known.ktorch.data
+.. automodule:: delearn.common
     :members:
