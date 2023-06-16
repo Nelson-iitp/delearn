@@ -73,3 +73,5 @@ class QuantiyMonitor:
                     if verbose: print(f'|~| Stopping on {self.name} = [{current}] @ epoch {epoch} | best value = [{self.best}] @ epoch {self.best_epoch}')
                     return True # end of patience
         return False
+
+

@@ -4,45 +4,53 @@ __doc__=r"""
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 __all__ = [
     
-    'Module', 'Modular', 
+    'Module', 'Modular',
 
 ]
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+from typing import Any
 import torch as tt
 from io import BytesIO
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
 class Module:
-    r"""An ordered collection of named parameters that require grad. Parameters can be accessed by both key and index"""
+    r"""A dict of parameters containing named tensors that require grad. 
+    
+    # Implements __iter__ :: To iter over names only, (parameters can be accessed by name) 
+        ~ Iterator over names```for name in module: parameter = module[name]```
 
-    def __init__(self, parameters=None) -> None:
-        self._parameters = {} if parameters is None else parameters
-        #self._names = [] if names is None else names
+    # Implements __call__ :: To iter over names and parameters, 
+        ~ Iterator over parameters only:: ```for parameter in module()```, similar to torch ```for parameter in module.parameters()```
+        ~ Iterator over name-parameter pair :: ```for name, parameter in module(True)```
+
+    # The only member defined in the class is ```self._parameters``` which is a dict
+    """
+
+    def __init__(self, parameters=None) -> None: self._parameters = {} if parameters is None else parameters
+
+    def __len__(self): return self._parameters.__len__()
 
     def __getitem__(self, i): return self._parameters[i]
 
-    def parameters(self): return self._parameters.values()
+    def __iter__(self): return self._parameters.__iter__() 
 
-    def names(self): return self._parameters.keys()
-
-    def items(self): return self._parameters.items()
-
-
+    def __call__(self, names=False): return  self._parameters.items() if names else self._parameters.values()  
+    
 class Modular:
 
     @staticmethod
     def count_parameters(module, requires_grad=None): 
         if requires_grad is None: # count all parameters
-            return sum([p.numel() for p in module.parameters()]) 
+            return sum([p.numel() for p in module()]) 
         else:
-            return sum([p.numel() for p in  module.parameters() if p.requires_grad is requires_grad ])
+            return sum([p.numel() for p in  module() if p.requires_grad is requires_grad ])
 
     @staticmethod
     def show_parameters(module, values:bool=False):
         nos_trainable, nos_frozen = 0, 0
         print('=====================================')
-        for i,(n,p) in enumerate(module.items()):
+        for i,(n,p) in enumerate(module(True)):
             iparam = p.numel()
             if p.requires_grad:
                 nos_trainable += iparam
@@ -61,7 +69,7 @@ class Modular:
     @tt.no_grad()
     def copy_parameters(module_from, module_to) -> None:
         r""" Copies module parameters, both modules are supposed to be identical """
-        for pt,pf in zip(module_to.parameters(), module_from.parameters()): pt.copy_(pf)
+        for pt,pf in zip(module_to(), module_from()): pt.copy_(pf)
 
     @staticmethod
     @tt.no_grad()
@@ -75,14 +83,14 @@ class Modular:
 
         :returns: a list of differences in each parameter or their sum if ``do_sum`` is True.
         """
-        d = [ (abs(p1 - p2) if do_abs else (p1 - p2)) for p1,p2 in zip(module1.parameters(), module2.parameters()) ]
+        d = [ (abs(p1 - p2) if do_abs else (p1 - p2)) for p1,p2 in zip(module1(), module2()) ]
         if do_sum: d = [ tt.sum(p) for p in d  ]
         return d
 
     @staticmethod
     @tt.no_grad()
     def rand_parameters(module, lb=-0.1, ub=0.1):
-        for p in module.parameters(): p.data.copy_(tt.rand_like(p.data) * (ub-lb) + lb)
+        for p in module(): p.data.copy_(tt.rand_like(p.data) * (ub-lb) + lb)
 
     @staticmethod
     def clone_parameters(module, n_copies:int=1, detach:bool=False):
@@ -95,7 +103,7 @@ class Modular:
             buffer.seek(0)
             model_copy = tt.load(buffer)
             if detach:  
-                for p in model_copy.parameters(): p.requires_grad_(False)
+                for p in model_copy(): p.requires_grad_(False)
             model_copies.append(model_copy)
         buffer.close()
         del buffer
@@ -103,11 +111,11 @@ class Modular:
 
     @staticmethod
     def requires_grad(module, requires_grad: bool = True):
-        for p in module.parameters(): p.requires_grad_(requires_grad)
+        for p in module(): p.requires_grad_(requires_grad)
 
     @staticmethod
     def zero_grad(module, set_to_none: bool = False) -> None:
-        for p in module.parameters():
+        for p in module():
             if p.grad is not None:
                 if set_to_none:
                     p.grad = None
@@ -119,7 +127,10 @@ class Modular:
                     p.grad.zero_()
 
 
-    """ Module Creators: ```creatorF``` is the ```Module``` class """
+    """ NOTE: Module Creators: 
+    ```creatorF``` accepts a ```dict[str, Tensor]``` and return an object (usually a ```Module``` object )
+    ```creatorF``` is (usually) the ```Module``` class and calls the ```__init__`` method 
+    """
 
     @staticmethod
     def create_from_parameter_size(creatorF, parameters_size, dtype=None, device=None, requires_grad=True):

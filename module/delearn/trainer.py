@@ -55,7 +55,7 @@ class Trainer:
         preds = forward(module, inputs)
         #print(f'Loss:{x.shape=}, {ypred.shape=}, {y.shape=}')
         loss = lossf(preds, labels)
-        grads = ag.grad(loss, module.parameters(), create_graph=create_graph)
+        grads = ag.grad(loss, module.values(), create_graph=create_graph)
         module = optimf(module, grads, create_graph)
         lossval = loss.item()
         return lossval, module
@@ -184,7 +184,7 @@ class TrainingCallback(Callback):
         self._epoch_losses.append(tt.mean(losses).item())
         del self._batch_losses
         if self.val_data: self.validate(self.module)
-        self.module = None
+        #self.module = None
 
     def on_train_end(self, n): 
         self.epoch_losses.append(tt.tensor(self._epoch_losses))

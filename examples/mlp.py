@@ -57,8 +57,8 @@ parameters_dict = MLP_PARAMS_DICT(
 print(parameters_dict.keys())
 
 module = dl.Module(parameters_dict)
-dl.rand_parameters(module)
-dl.show_parameters(module)
+dl.Modular.rand_parameters(module)
+dl.Modular.show_parameters(module)
 
 def forward(m, x): 
     return ( tt.matmul(
@@ -70,6 +70,7 @@ def forward(m, x):
         , m['w1']) + m['b1'] )
         , m['w2']) + m['b2'] )
         , m['w3']) + m['b3'] )
+
 
 
 # dl.count_parameters(module)

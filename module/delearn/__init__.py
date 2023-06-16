@@ -7,15 +7,14 @@ Deep Learning with pytorch
 
 from .common import *
 
-from .module import *
-
-from .data import *
-
-from .optim import * # depends on .module
-
 from .trainer import *
 
 from .utils import *
+
+from . import nn
+
+from . import oo
+
 
 
 __version__="0.0.1"
